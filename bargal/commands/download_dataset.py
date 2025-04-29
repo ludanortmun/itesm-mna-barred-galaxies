@@ -4,7 +4,6 @@ import click
 import pandas as pd
 
 from bargal.images.client import GalaxyImageClient
-from bargal.images.storage import ImageFileStore
 from bargal.models import Galaxy
 
 
@@ -22,8 +21,7 @@ def main(csv_file: str, output_dir: str, skip: int or None, top: int or None):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    storage = ImageFileStore(output_dir)
-    client = GalaxyImageClient(local_dir=output_dir)
+    client = GalaxyImageClient(storage_path=output_dir)
 
     start = skip if skip else 0
     end = min(start + top if top else len(df), len(df))
@@ -31,7 +29,7 @@ def main(csv_file: str, output_dir: str, skip: int or None, top: int or None):
     for i in range(start, end):
         row = df.iloc[i]
         g = Galaxy.from_dict(row.to_dict())
-        client.get_image(g)
+        client.get_image(g, save_to_disk=True)
 
 if __name__ == '__main__':
     main()
