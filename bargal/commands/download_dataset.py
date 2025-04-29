@@ -11,8 +11,9 @@ from bargal.models import Galaxy
 @click.command()
 @click.argument('csv_file', type=click.Path(exists=True))
 @click.option('--output-dir', '-o', type=click.Path(), default='.', help='Output directory for downloaded images')
+@click.option('--skip', '-s', type=int, default=None, help='Number of images to skip')
 @click.option('--top', '-t', type=int, default=None, help='Number of images to download')
-def main(csv_file: str, output_dir: str, top: None):
+def main(csv_file: str, output_dir: str, skip: int or None, top: int or None):
     """Download images for galaxies listed in a CSV file."""
     # Read the CSV file
     df = pd.read_csv(csv_file)
@@ -24,17 +25,13 @@ def main(csv_file: str, output_dir: str, top: None):
     storage = ImageFileStore(output_dir)
     client = GalaxyImageClient(local_dir=output_dir)
 
-    # Iterate over each row in the DataFrame
-    for index, row in df.iterrows():
+    start = skip if skip else 0
+    end = min(start + top if top else len(df), len(df))
+
+    for i in range(start, end):
+        row = df.iloc[i]
         g = Galaxy.from_dict(row.to_dict())
-
-        # Since we are using the client with local_dir, we can directly save the image
         client.get_image(g)
-
-        if top is not None and index + 1 >= top:
-            click.echo(f"Downloaded {top} images.")
-            break
-
 
 if __name__ == '__main__':
     main()
