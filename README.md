@@ -1,7 +1,7 @@
 # Barred Galaxies Dataset Tool
 
-A Python tool for downloading and managing galaxy images from the Legacy Survey DR10, specifically focused on barred
-galaxies' analysis.
+A Python tool for detecting barred galaxies in astronomical images. Part of my Master's degree project at ITESM, in
+collaboration with UNAM's Insituto de Astronomía.
 
 ## Installing dependencies
 
