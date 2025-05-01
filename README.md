@@ -33,7 +33,7 @@ You can download the images using the `bargal-datasetdown` command.
 To download galaxy images from a CSV dataset, run the following command:
 
 ```bash
-bargal-datasetdown data/dataset.csv --o output/directory
+bargal-datasetdown data/dataset.csv -o output/directory
 ```
 
 It is recommended to use `data/images` as the output directory.

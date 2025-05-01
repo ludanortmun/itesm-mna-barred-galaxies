@@ -27,7 +27,7 @@ class GalaxyImageClient:
         if storage_path is not None:
             self._diskcache = ImageFileStore(storage_path)
 
-    def _get_cached(self, name: str) -> bytes or None:
+    def _get_cached(self, name: str) -> Optional[bytes]:
         # Try memory cache first
         if name in self._memcache:
             return self._memcache[name]
