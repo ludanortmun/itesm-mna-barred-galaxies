@@ -38,6 +38,27 @@ bargal-datasetdown data/dataset.csv -o output/directory
 
 It is recommended to use `data/images` as the output directory.
 
+By adding the `--by-bands` flag, this command will also download individual images for each band.
+
+```bash
+bargal-datasetdown data/dataset.csv -o data/images --by-bands
+```
+
+It is also possible to use the `--skip` and `--top` options to limit the number of images downloaded. This is useful for
+downloading a subset of the images for this dataset or for applying pagination logic to download images in batches.
+
+For example, the following command will only download the first 10 records:
+
+```bash
+bargal-datasetdown data/dataset.csv -o data/images --by-bands --top 10
+```
+
+And then the following command will skip the first 10 records and download the next 10:
+
+```bash
+bargal-datasetdown data/dataset.csv -o data/images --by-bands --skip 10 --top 10
+```
+
 ### Notebooks
 
 The Jupyter notebooks in the `notebooks` directory are designed to help you analyze the downloaded images. If the
