@@ -9,7 +9,7 @@ url_template = "https://www.legacysurvey.org/viewer/jpeg-cutout?ra={ra}&dec={dec
 supported_bands = {'g', 'r', 'z'}
 
 def _download_image(galaxy: Galaxy, *, bands: str = 'grz') -> bytes:
-    print(f"Downloading image for {galaxy.name} at RA: {galaxy.ra}, DEC: {galaxy.dec}")
+    print(f"Downloading image for {galaxy.name} at RA: {galaxy.ra}, DEC: {galaxy.dec}; bands: {bands}")
 
     url = url_template.format(ra=galaxy.ra, dec=galaxy.dec, bands=bands)
 
@@ -27,7 +27,7 @@ class GalaxyImageClient:
         if storage_path is not None:
             self._diskcache = ImageFileStore(storage_path)
 
-    def _get_cached(self, name: str) -> bytes:
+    def _get_cached(self, name: str) -> bytes or None:
         # Try memory cache first
         if name in self._memcache:
             return self._memcache[name]
@@ -38,14 +38,16 @@ class GalaxyImageClient:
             self._memcache[name] = image  # Cache in memory for future use
             return image
 
+        return None
+
     def get_image(self, galaxy: Union[Galaxy, GalaxyDict], *, save_to_disk: bool = True) -> bytes:
         """
         Gets a galaxy image from disk cache, memory cache, or downloads it.
         The image itself will be an RGB representation of the G, R, and Z bands.
 
         Args:
-            galaxy (Galaxy): The galaxy object containing its name, RA and DEC.
-            save_to_disk (bool): If True and storage_path is set, saves downloaded image to disk.
+            galaxy (Galaxy): The galaxy object containing its name, RA, and DEC.
+            save_to_disk (bool): If True and if storage_path is set, saves downloaded image to disk.
                                 Ignored if storage_path was not provided. Default: True.
 
         Returns:
@@ -61,7 +63,7 @@ class GalaxyImageClient:
         if cached:
             return cached
 
-        # Download if not found in cache
+        # Download if not found in the cache
         image = _download_image(g)
         self._memcache[g.name] = image
 
@@ -80,8 +82,8 @@ class GalaxyImageClient:
         Gets a galaxy image with specific bands from disk cache, memory cache, or downloads it.
 
         Args:
-            galaxy (Galaxy): The galaxy object containing its name, RA and DEC.
-            save_to_disk (bool): If True and storage_path is set, saves downloaded image to disk.
+            galaxy (Galaxy): The galaxy object containing its name, RA, and DEC.
+            save_to_disk (bool): If True and if storage_path is set, saves downloaded image to disk.
                                 Ignored if storage_path was not provided. Default: True.
             bands (str): The bands to use for the image. Default: 'grz'.
 
@@ -99,7 +101,7 @@ class GalaxyImageClient:
                 result[band] = cached
                 continue
 
-            # Download if not found in cache
+            # Download if not found in the cache
             image = _download_image(g, bands=band)
             self._memcache[img_name] = image
             result[band] = image
