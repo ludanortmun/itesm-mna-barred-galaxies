@@ -180,7 +180,7 @@ class GalaxyImageClient:
             if self._diskcache and save_to_disk:
                 self._diskcache.save_image(fits_img_name, fits_data)
 
-        fits_img = fits.HDUList(file=fits_data)
+        fits_img = fits.open(BytesIO(fits_data))
 
         return Observation(rgb_repr=_bytes_to_image_array(rgb, grayscale=False),
                            g_band=np.flip(fits_img[0].data[0], axis=0),
