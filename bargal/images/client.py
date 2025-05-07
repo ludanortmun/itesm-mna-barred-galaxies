@@ -140,25 +140,36 @@ class GalaxyImageClient:
     def get_as_observation(self,
                            galaxy: Union[Galaxy, GalaxyDict],
                            *,
-                           save_to_disk: bool = True) -> Observation:
+                           save_to_disk: bool = True,
+                           use_fits: bool = False) -> Observation:
         """
         Gets an Observation object for a galaxy.
-        Images are retrieved from disk cache, memory cache, or downloads it.
+        Images are retrieved from disk cache, memory cache, or downloaded.
 
         Args:
             galaxy (Galaxy): The galaxy object containing its name, RA, and DEC.
             save_to_disk (bool): If True and if storage_path is set, saves downloaded image to disk.
                                 Ignored if storage_path was not provided. Default: True.
+            use_fits (bool): If True, retrieves the FITS image for individual bands. Default: False.
 
         Returns:
             Observation: An Observation object containing the RGB representation and individual band data.
-            Individual bands are retrieved from the FITS raw image.
         """
         g = galaxy if isinstance(galaxy, Galaxy) else Galaxy.from_dict(galaxy)
 
         # Get the RGB image using the existing method
         rgb = self.get_image(g, save_to_disk=save_to_disk)
 
+        # If not using FITS for individual bands, retrieve the bands as JPEG images using the existing method
+        if not use_fits:
+            bands = self.get_image_as_bands(g, save_to_disk=save_to_disk, bands='grz')
+            return Observation(rgb_repr=_bytes_to_image_array(rgb, grayscale=False),
+                               g_band=_bytes_to_image_array(bands['g'], grayscale=True),
+                               r_band=_bytes_to_image_array(bands['r'], grayscale=True),
+                               z_band=_bytes_to_image_array(bands['z'], grayscale=True))
+
+        # Otherwise, we download the FITS image for the galaxy.
+        # A benefit of this is that a single download will contain all three bands as separate channels.
         fits_img_name = f"{g.name}.fits"
         fits_data = self._get_cached(fits_img_name)
         if not fits_data:
