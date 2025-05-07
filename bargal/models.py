@@ -1,5 +1,25 @@
 import enum
+from dataclasses import dataclass
 from typing import TypedDict, Optional
+
+import numpy as np
+
+
+@dataclass
+class Observation:
+    """
+    Dataclass representing an observation of a galaxy.
+
+    Attributes:
+        rgb_repr (np.ndarray): The RGB representation of the galaxy image.
+        g_band (np.ndarray): The G band data.
+        r_band (np.ndarray): The R band data.
+        z_band (np.ndarray): The Z band data.
+    """
+    rgb_repr: np.ndarray
+    g_band: np.ndarray
+    r_band: np.ndarray
+    z_band: np.ndarray
 
 
 class GalaxyBar(enum.Enum):
@@ -42,9 +62,4 @@ class Galaxy:
         return galaxy
 
     def to_dict(self) -> GalaxyDict:
-        return {
-            'name': self.name,
-            'objra': self.ra,
-            'objdec': self.dec,
-            'Bars': self.bar.value
-        }
+        return {'name': self.name, 'objra': self.ra, 'objdec': self.dec, 'Bars': self.bar.value}
