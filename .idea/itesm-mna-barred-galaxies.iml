@@ -4,6 +4,9 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/bargal.egg-info" />
+      <excludeFolder url="file://$MODULE_DIR$/bargal/bargal.egg-info" />
+      <excludeFolder url="file://$MODULE_DIR$/build" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.10 (itesm-mna-barred-galaxies)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
