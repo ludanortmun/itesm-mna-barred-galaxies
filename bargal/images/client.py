@@ -133,7 +133,7 @@ class GalaxyImageClient:
 
             # Save to disk if enabled
             if self._diskcache and save_to_disk:
-                self._diskcache.save_image(f"{img_name}.jpg", image)
+                self._diskcache.save_image(img_name, image)
 
         return result
 
