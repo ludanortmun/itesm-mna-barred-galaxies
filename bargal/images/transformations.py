@@ -1,7 +1,7 @@
 from astropy.visualization import PowerStretch, LogStretch, AsinhStretch, SqrtStretch, SquaredStretch
 
 
-def power(exponent: float) -> callable:
+def power_transform(exponent: float) -> callable:
     """
     Apply power transformation to the image.
 
@@ -15,7 +15,7 @@ def power(exponent: float) -> callable:
     # return lambda image: np.clip(image ** exponent, 0, 1)
 
 
-def log() -> callable:
+def log_transform() -> callable:
     """
     Apply logarithmic transformation to the image.
 
@@ -26,7 +26,7 @@ def log() -> callable:
     # return lambda image: np.clip(np.log(1 + image), 0, 1)
 
 
-def asinh() -> callable:
+def asinh_transform() -> callable:
     """
     Apply inverse hyperbolic sine transformation to the image.
 
@@ -37,7 +37,7 @@ def asinh() -> callable:
     # return lambda image: np.clip(np.arcsinh(image), 0, 1)
 
 
-def squared() -> callable:
+def squared_transform() -> callable:
     """
     Apply squared transformation to the image.
 
@@ -47,7 +47,7 @@ def squared() -> callable:
     return SquaredStretch()
 
 
-def sqrt() -> callable:
+def sqrt_transform() -> callable:
     """
     Apply square root transformation to the image.
 
