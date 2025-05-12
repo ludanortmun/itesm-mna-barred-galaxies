@@ -59,6 +59,13 @@ And then the following command will skip the first 10 records and download the n
 bargal-datasetdown data/dataset.csv -o data/images --by-bands --skip 10 --top 10
 ```
 
+Additionally, you can use the `--use-fits` flag to download the images in FITS format instead of JPEG. This will ignore
+the `--by-bands` flag, since FITS files contain all bands in a single file.
+
+```bash
+bargal-datasetdown data/dataset.csv -o data/images --use-fits
+```
+
 ### Notebooks
 
 The Jupyter notebooks in the `notebooks` directory are designed to help you analyze the downloaded images. If the
@@ -67,7 +74,9 @@ The Jupyter notebooks in the `notebooks` directory are designed to help you anal
 #### Running in Google Colab
 
 To be able to run the notebooks in Google Colab, you need to ensure the `bargal` package is installable in your session.
-You can do this by downloading this repository as a ZIP file and uploading it to your Google Colab session. To download the latest revision of the main branch as a ZIP file, use this URL: https://github.com/ludanortmun/itesm-mna-barred-galaxies/archive/refs/heads/main.zip
+You can do this by downloading this repository as a ZIP file and uploading it to your Google Colab session. To download
+the latest revision of the main branch as a ZIP file, use this
+URL: https://github.com/ludanortmun/itesm-mna-barred-galaxies/archive/refs/heads/main.zip
 
 Then, at the start of the notebook, add and run a code cell with the following commands:
 
