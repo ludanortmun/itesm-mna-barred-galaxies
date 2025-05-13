@@ -40,7 +40,7 @@ def preprocess(dataset_path: str,
     for i in range(start, end):
         row = df.iloc[i]
         g = Galaxy.from_dict(row.to_dict())
-        observation = client.get_as_observation(g, save_to_disk=True, use_fits=True)
+        observation = client.get_as_observation(g, save_to_disk=True, use_fits=True, skip_rgb=True)
 
         processed_image = img_processor.preprocess(observation)
         processed_image = (processed_image * 255).astype(np.uint8)

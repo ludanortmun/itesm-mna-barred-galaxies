@@ -141,7 +141,8 @@ class GalaxyImageClient:
                            galaxy: Union[Galaxy, GalaxyDict],
                            *,
                            save_to_disk: bool = True,
-                           use_fits: bool = False) -> Observation:
+                           use_fits: bool = False,
+                           skip_rgb: bool = False) -> Observation:
         """
         Gets an Observation object for a galaxy.
         Images are retrieved from disk cache, memory cache, or downloaded.
@@ -151,14 +152,17 @@ class GalaxyImageClient:
             save_to_disk (bool): If True and if storage_path is set, saves downloaded image to disk.
                                 Ignored if storage_path was not provided. Default: True.
             use_fits (bool): If True, retrieves the FITS image for individual bands. Default: False.
+            skip_rgb (bool): If True, skips the RGB image retrieval. Default: False.
 
         Returns:
             Observation: An Observation object containing the RGB representation and individual band data.
         """
         g = galaxy if isinstance(galaxy, Galaxy) else Galaxy.from_dict(galaxy)
 
-        # Get the RGB image using the existing method
-        rgb = self.get_image(g, save_to_disk=save_to_disk)
+        rgb = None
+        if not skip_rgb:
+            # Get the RGB image using the existing method
+            rgb = self.get_image(g, save_to_disk=save_to_disk)
 
         # If not using FITS for individual bands, retrieve the bands as JPEG images using the existing method
         if not use_fits:
@@ -182,7 +186,7 @@ class GalaxyImageClient:
 
         fits_img = fits.open(BytesIO(fits_data))
 
-        return Observation(rgb_repr=_bytes_to_image_array(rgb, grayscale=False),
+        return Observation(rgb_repr=_bytes_to_image_array(rgb, grayscale=False) if rgb else None,
                            g_band=np.flip(fits_img[0].data[0], axis=0),
                            r_band=np.flip(fits_img[0].data[1], axis=0),
                            z_band=np.flip(fits_img[0].data[2], axis=0))
