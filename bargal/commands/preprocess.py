@@ -7,7 +7,7 @@ from PIL import Image
 from bargal.dataset.load import load_dataset
 from bargal.images.client import GalaxyImageClient
 from bargal.models import Galaxy
-from bargal.preprocessing import GRLOG_GR_DIFF
+from bargal.preprocessing import PREPROCESSORS
 
 
 @click.command()
@@ -16,11 +16,13 @@ from bargal.preprocessing import GRLOG_GR_DIFF
 @click.option('--output-dir', '-o', default='data/processed', type=click.Path(), help='Output directory for processed images')
 @click.option('--skip', '-s', type=int, default=None, help='Number of entries to skip')
 @click.option('--top', '-t', type=int, default=None, help='Number of entries to process')
+@click.option('--preprocessor', '-p', type=click.Choice(PREPROCESSORS.keys(), case_sensitive=False), default='GRLOG_GR_DIFF', help='Preprocessor to use')
 def preprocess(dataset_path: str,
                img_path: str,
                output_dir: str,
                skip: int or None,
-               top: int or None) -> None:
+               top: int or None,
+               preprocessor: str) -> None:
     df = load_dataset(dataset_path)
 
     # Ensure output directory exists
@@ -32,7 +34,8 @@ def preprocess(dataset_path: str,
     start = skip if skip else 0
     end = min(start + top if top else len(df), len(df))
 
-    img_processor = GRLOG_GR_DIFF
+    print(f'Using preprocessor: {preprocessor.upper()}')
+    img_processor = PREPROCESSORS[preprocessor.upper()]
 
     for i in range(start, end):
         row = df.iloc[i]

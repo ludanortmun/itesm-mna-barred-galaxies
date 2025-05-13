@@ -66,7 +66,11 @@ GRLOG_GR_DIFF = GRDiffProcessor(
     ),
     result_transform=make_image_pipeline(
         center_crop(),
-        # normalize_transformer(),
         adaptive_normalize_transformer(),
     )
 )
+
+PREPROCESSORS = {
+    'SQRT_GR_DIFF': SQRT_GR_DIFF,
+    'GRLOG_GR_DIFF': GRLOG_GR_DIFF
+}
