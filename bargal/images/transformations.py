@@ -21,6 +21,7 @@ class ImageTransformer:
         apply(image: np.ndarray) -> np.ndarray:
             Apply the transformation to the given image (alternative to __call__).
     """
+
     def __init__(self, transform: Callable[[np.ndarray], np.ndarray]):
         self.transform = transform
 
@@ -59,12 +60,14 @@ def make_image_pipeline(*transformers: ImageTransformer) -> ImageTransformer:
     Returns:
         ImageTransformer: A new ImageTransformer that applies the transformations in sequence.
     """
+
     def pipeline(image: np.ndarray) -> np.ndarray:
         for transformer in transformers:
             image = transformer(image)
         return image
 
     return ImageTransformer(pipeline)
+
 
 # Below are our pre-defined transformer functions. They are, for the most part, simple functions that just
 # call a function from a variety of libraries, like OpenCV or Astropy. While we could call them directly
@@ -143,6 +146,7 @@ def threshold_transformer(threshold_value: int = 127) -> ImageTransformer:
     Returns:
         ImageTransformer: An ImageTransformer that applies the threshold transformation to an image.
     """
+
     def apply_threshold(image: np.ndarray) -> np.ndarray:
         _, binary_image = cv2.threshold(image, threshold_value, 255, cv2.THRESH_BINARY)
         return binary_image
@@ -163,6 +167,7 @@ def adaptive_threshold_transformer(*,
     Returns:
         ImageTransformer: An ImageTransformer that applies the adaptive threshold transformation to an image.
     """
+
     def apply_adaptive_threshold(image: np.ndarray) -> np.ndarray:
         image_uint8 = (image * 255).astype(np.uint8) if image.max() <= 1.0 else image
         return cv2.adaptiveThreshold(
@@ -224,6 +229,7 @@ def normalize_transformer() -> ImageTransformer:
     Returns:
         ImageTransformer: An ImageTransformer that normalizes an image.
     """
+
     def _normalize(image: np.ndarray) -> np.ndarray:
         image = (image - np.min(image)) / (np.max(image) - np.min(image))
         return image.astype(np.float32)
@@ -246,3 +252,14 @@ def adaptive_normalize_transformer() -> ImageTransformer:
         return image_normalized.astype(np.float32)
 
     return ImageTransformer(_normalize_adaptive)
+
+
+def center_crop() -> ImageTransformer:
+    """
+    Center crop the image to a square shape.
+
+    Returns:
+        ImageTransformer: An ImageTransformer that applies center cropping to an image.
+    """
+
+    return ImageTransformer(lambda img: img[200:600, 200:600])
