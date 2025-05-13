@@ -45,7 +45,7 @@ def preprocess(dataset_path: str,
         processed_image = img_processor.preprocess(observation)
         processed_image = (processed_image * 255).astype(np.uint8)
 
-        processed_image_name = f"{output_dir}/{g.name}_processed.png"
+        processed_image_name = f"{output_dir}/{g.name}.png"
         img = Image.fromarray(processed_image, 'L')
         img.save(processed_image_name)
 
