@@ -5,13 +5,14 @@ setup(
     version="0.1.0",
     packages=find_packages(),
     install_requires=[
-        "click>=8.0.0",
-        "requests>=2.25.0",
-        "pandas>=2.2.0",
-        "numpy>=2.2.0",
-        "Pillow>=11.0.0",
-        "astropy>=6.1.0",
-        "opencv-python>=4.11.0",
+        "astropy~=6.1.7",
+        "click~=8.2.0",
+        "numpy~=2.0.0",
+        "opencv_python~=4.11.0.86",
+        "pandas~=2.2.3",
+        "Pillow~=11.2.1",
+        "Requests~=2.32.3",
+        "setuptools~=68.2.0",
     ],
     entry_points={
         "console_scripts": [

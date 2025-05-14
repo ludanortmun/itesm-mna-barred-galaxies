@@ -101,17 +101,10 @@ The Jupyter notebooks in the `notebooks` directory are designed to help you anal
 #### Running in Google Colab
 
 To be able to run the notebooks in Google Colab, you need to ensure the `bargal` package is installable in your session.
-You can do this by downloading this repository as a ZIP file and uploading it to your Google Colab session. To download
-the latest revision of the main branch as a ZIP file, use this
-URL: https://github.com/ludanortmun/itesm-mna-barred-galaxies/archive/refs/heads/main.zip
+You can do this by installing the package from Git. To do this, run the following command in a code cell:
 
-Then, at the start of the notebook, add and run a code cell with the following commands:
-
+``` 
+!pip install git+https://github.com/ludanortmun/itesm-mna-barred-galaxies.git
 ```
-!unzip itesm-mna-barred-galaxies-main.zip
-!pip install ./itesm-mna-barred-galaxies-main
-```
-
-This command will unzip the repository files and install the `bargal` package in your Google Colab session.
 
 Then, replace any path referencing the `../data` directory with `/content/itesm-mna-barred-galaxies-main/data`. 
