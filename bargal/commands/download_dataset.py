@@ -5,10 +5,11 @@ import pandas as pd
 
 from bargal.images.client import GalaxyImageClient
 from bargal.models import Galaxy
+from bargal.dataset.load import load_dataset
 
 
 @click.command()
-@click.argument('csv_file', type=click.Path(exists=True))
+@click.argument('dataset_file', type=click.Path(exists=True))
 @click.option('--output-dir', '-o', type=click.Path(), default='.', help='Output directory for downloaded images')
 @click.option('--skip', '-s', type=int, default=None, help='Number of images to skip')
 @click.option('--top', '-t', type=int, default=None, help='Number of images to download')
@@ -17,11 +18,10 @@ from bargal.models import Galaxy
                    "This is only available for JPG downloads.")
 @click.option("--use-fits", is_flag=True,
               help="Will download images in FITS format instead of JPG. If true, --by-bands will be ignored.")
-def main(csv_file: str, output_dir: str, skip: int or None, top: int or None, by_bands: bool = False,
+def main(dataset_file: str, output_dir: str, skip: int or None, top: int or None, by_bands: bool = False,
          use_fits: bool = False) -> None:
-    """Download images for galaxies listed in a CSV file."""
-    # Read the CSV file
-    df = pd.read_csv(csv_file)
+    """Download images for galaxies listed in a CSV or FITS file."""
+    df = load_dataset(dataset_file)
 
     # Ensure output directory exists
     if not os.path.exists(output_dir):

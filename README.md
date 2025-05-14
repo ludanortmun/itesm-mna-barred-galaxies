@@ -30,7 +30,7 @@ pip install .
 The basic dataset is included in this repository; however, due to size constraints, the actual images are not included.
 You can download the images using the `bargal-datasetdown` command.
 
-To download galaxy images from a CSV dataset, run the following command:
+To download galaxy images from a CSV or FITS dataset, run the following command:
 
 ```bash
 bargal-datasetdown data/dataset.csv -o output/directory
@@ -65,6 +65,33 @@ the `--by-bands` flag, since FITS files contain all bands in a single file.
 ```bash
 bargal-datasetdown data/dataset.csv -o data/images --use-fits
 ```
+
+### Preprocess images
+
+The `bargal-preprocess` command is used to preprocess the downloaded images. This is intended to be used with FITS
+images.
+It requires the path to the dataset and the path to the downloaded images' folder. By default, the output images will be
+saved in the data/preprocessed directory, but can be changes using the `--output-dir` (`-o`) option.
+
+```bash
+bargal-preprocess data/dataset.csv data/images -o data/preprocessed
+````
+
+This command also skip and top parameters to limit the number of images to be preprocessed.
+
+```bash
+bargal-preprocess data/dataset.csv data/images -o data/preprocessed --skip 10 --top 10
+```
+
+By default, images will be processed using the GRLOG_GR_DIFF processor, which computes the difference between the G band
+and the R band, applying a logarithmic transformation to the R band beforehand. This is the recommended processor for
+this dataset. However, other processors are available and can be used by specifying the `--processor` (`-p`) option.
+
+```bash
+bargal-preprocess data/dataset.csv data/images -o data/preprocessed -p SQRLOG_GR_DIFF
+```
+
+For a list of registered processors, refer to: [bargal/preprocessing.py](bargal/preprocessing.py).
 
 ### Notebooks
 

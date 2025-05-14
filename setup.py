@@ -13,6 +13,7 @@ setup(
         "console_scripts": [
             "bargal-imgdown=bargal.commands.download_image:main",
             "bargal-datasetdown=bargal.commands.download_dataset:main",
+            "bargal-preprocess=bargal.commands.preprocess:main",
         ],
     },
     author="ludanortmun",

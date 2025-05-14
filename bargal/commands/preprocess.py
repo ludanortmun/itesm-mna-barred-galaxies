@@ -17,12 +17,12 @@ from bargal.preprocessing import PREPROCESSORS, ImageProcessor
 @click.option('--skip', '-s', type=int, default=None, help='Number of entries to skip')
 @click.option('--top', '-t', type=int, default=None, help='Number of entries to process')
 @click.option('--preprocessor', '-p', type=click.Choice(PREPROCESSORS.keys(), case_sensitive=False), default='GRLOG_GR_DIFF', help='Preprocessor to use')
-def preprocess(dataset_path: str,
-               img_path: str,
-               output_dir: str,
-               skip: int or None,
-               top: int or None,
-               preprocessor: str) -> None:
+def main(dataset_path: str,
+         img_path: str,
+         output_dir: str,
+         skip: int or None,
+         top: int or None,
+         preprocessor: str) -> None:
     click.echo(f'Loading dataset from {dataset_path}'"")
     df = load_dataset(dataset_path)
 
@@ -77,4 +77,4 @@ def _save_image(img: np.ndarray, output_dir: str, name: str) -> None:
         img.save(processed_image_name)
 
 if __name__ == "__main__":
-    preprocess()
+    main()
