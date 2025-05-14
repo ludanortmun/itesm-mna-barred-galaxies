@@ -46,28 +46,22 @@ def _bytes_to_image_array(img_data: bytes, *, grayscale: bool) -> np.ndarray:
 
 class GalaxyImageClient:
     def __init__(self, *, storage_path=None) -> None:
-        self._memcache = {}
         self._diskcache = None
         self.storage_path = storage_path
         if storage_path is not None:
             self._diskcache = ImageFileStore(storage_path)
 
     def _get_cached(self, name: str) -> Optional[bytes]:
-        # Try memory cache first
-        if name in self._memcache:
-            return self._memcache[name]
-
         # Try disk cache if available
         if self._diskcache and self._diskcache.has_image(name):
             image = self._diskcache.load_image(name)
-            self._memcache[name] = image  # Cache in memory for future use
             return image
 
         return None
 
     def get_image(self, galaxy: Union[Galaxy, GalaxyDict], *, save_to_disk: bool = True) -> bytes:
         """
-        Gets a galaxy image from disk cache, memory cache, or downloads it.
+        Gets a galaxy image from a disk cache or downloads it.
         The image itself will be an RGB representation of the G, R, and Z bands.
 
         Args:
@@ -79,7 +73,6 @@ class GalaxyImageClient:
             bytes: The image data.
 
         Side Effects:
-            - Always caches downloaded images in memory
             - If storage_path was set and save_to_disk=True, saves downloaded images to disk
         """
         g = galaxy if isinstance(galaxy, Galaxy) else Galaxy.from_dict(galaxy)
@@ -90,7 +83,6 @@ class GalaxyImageClient:
 
         # Download if not found in the cache
         image = _download_image(g)
-        self._memcache[g.name] = image
 
         # Save to disk if enabled
         if self._diskcache and save_to_disk:
@@ -128,7 +120,6 @@ class GalaxyImageClient:
 
             # Download if not found in the cache
             image = _download_image(g, bands=band)
-            self._memcache[img_name] = image
             result[band] = image
 
             # Save to disk if enabled
@@ -178,15 +169,18 @@ class GalaxyImageClient:
         fits_data = self._get_cached(fits_img_name)
         if not fits_data:
             fits_data = _download_image(g, bands='grz', img_format='fits')
-            self._memcache[fits_img_name] = fits_data
 
             # Save to disk if enabled
             if self._diskcache and save_to_disk:
                 self._diskcache.save_image(fits_img_name, fits_data)
 
-        fits_img = fits.open(BytesIO(fits_data))
+        g, r, z = None, None, None
+        with fits.open(BytesIO(fits_data)) as fits_img:
+            g = fits_img[0].data[0]
+            r = fits_img[0].data[1]
+            z = fits_img[0].data[2]
 
         return Observation(rgb_repr=_bytes_to_image_array(rgb, grayscale=False) if rgb else None,
-                           g_band=np.flip(fits_img[0].data[0], axis=0),
-                           r_band=np.flip(fits_img[0].data[1], axis=0),
-                           z_band=np.flip(fits_img[0].data[2], axis=0))
+                           g_band=np.flip(g, axis=0),
+                           r_band=np.flip(r, axis=0),
+                           z_band=np.flip(z, axis=0))
