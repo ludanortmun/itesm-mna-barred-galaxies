@@ -1,12 +1,12 @@
-import numpy as np
 from abc import ABC, abstractmethod
+
+import numpy as np
 
 from bargal.images.transformations import (
     sqrt_transformer,
     adaptive_normalize_transformer,
     bilateral_filter_transformer,
     make_image_pipeline,
-    normalize_transformer,
     ImageTransformer,
     log_transformer,
     center_crop
@@ -15,6 +15,12 @@ from bargal.models import Observation
 
 
 class ImageProcessor(ABC):
+    """
+    Base class for image processors. An ImageProcessor is responsible for transforming
+    an Observation into a single image represented as a numpy array.
+    The dimensionality of the output image is determined by each specific implementation.
+    """
+
     @abstractmethod
     def preprocess(self, obs: Observation) -> np.ndarray:
         """
@@ -29,6 +35,7 @@ class GRDiffProcessor(ImageProcessor):
     GRDiffProcessor is a specialized image processor that computes the difference between
     two images (g and r bands). It applies different transformations to each band before computing the difference.
     The result is then processed with a final transformation pipeline.
+    This implementation will always return a 1-channel image.
     """
 
     def __init__(self, *,
@@ -89,4 +96,3 @@ PREPROCESSORS = {
     'SQRT_GR_DIFF': SQRT_GR_DIFF,
     'GRLOG_GR_DIFF': GRLOG_GR_DIFF
 }
-
