@@ -7,7 +7,11 @@ setup(
     install_requires=[
         "click>=8.0.0",
         "requests>=2.25.0",
-        "pandas>=2.2.0"
+        "pandas>=2.2.0",
+        "numpy>=2.2.0",
+        "Pillow>=11.0.0",
+        "astropy>=6.1.0",
+        "opencv-python>=4.11.0",
     ],
     entry_points={
         "console_scripts": [

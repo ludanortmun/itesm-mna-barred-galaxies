@@ -1,7 +1,6 @@
 import os
 
 import click
-import pandas as pd
 
 from bargal.images.client import GalaxyImageClient
 from bargal.models import Galaxy
