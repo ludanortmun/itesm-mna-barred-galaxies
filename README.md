@@ -107,4 +107,6 @@ You can do this by installing the package from Git. To do this, run the followin
 !pip install git+https://github.com/ludanortmun/itesm-mna-barred-galaxies.git
 ```
 
-Then, replace any path referencing the `../data` directory with `/content/itesm-mna-barred-galaxies-main/data`. 
+You will be prompted to restart your session. After you do, the bargal package should be available for import.
+
+Then, simply replace any path referencing the `../data` directory to match the path to the data in your Colab session. 
