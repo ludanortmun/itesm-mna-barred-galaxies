@@ -254,12 +254,52 @@ def adaptive_normalize_transformer() -> ImageTransformer:
     return ImageTransformer(_normalize_adaptive)
 
 
-def center_crop() -> ImageTransformer:
+def center_zoom_transformer(zoom_factor: float = 2.0) -> ImageTransformer:
     """
-    Center crop the image to a square shape.
+    Returns an ImageTransformer that crops the central region of the image, effectively zooming in by the given factor.
+    Note that this will change the size of the image. The final dimensions will be the original width and height divided by the zoom factor.
+
+    Args:
+        zoom_factor (float): The factor by which to zoom into the center of the image. Default is 2.0.
 
     Returns:
-        ImageTransformer: An ImageTransformer that applies center cropping to an image.
+        ImageTransformer: An ImageTransformer that applies center zoom to an image.
     """
 
-    return ImageTransformer(lambda img: img[200:600, 200:600])
+    def _center_zoom(image: np.ndarray) -> np.ndarray:
+        height, width = image.shape
+        new_width = int(width / zoom_factor)
+        new_height = int(height / zoom_factor)
+        start_x = (width - new_width) // 2
+        start_y = (height - new_height) // 2
+        end_x = start_x + new_width
+        end_y = start_y + new_height
+        return image[start_y:end_y, start_x:end_x]
+
+    return ImageTransformer(_center_zoom)
+
+
+def circular_mask_transformer(mask_radius: float = 0.4) -> ImageTransformer:
+    """
+    Returns an ImageTransformer that applies a circular mask to the center of the image.
+
+    The mask keeps pixels within the specified radius from the image center and sets others to zero.
+
+    Args:
+        mask_radius (float): Fraction of the minimum image dimension to use as the mask radius (0 < mask_radius <= 1).
+
+    Returns:
+        ImageTransformer: An ImageTransformer that applies a circular mask to an image.
+    """
+    def _apply_circular_mask(image: np.ndarray) -> np.ndarray:
+        height, width = image.shape
+        center_x, center_y = width // 2, height // 2
+        radius = int(min(width, height) * mask_radius)
+
+        y_indices, x_indices = np.ogrid[:height, :width]
+        distance = np.sqrt((x_indices - center_x) ** 2 + (y_indices - center_y) ** 2)
+        mask = (distance <= radius).astype(float)
+
+        return image * mask
+
+    return ImageTransformer(_apply_circular_mask)
