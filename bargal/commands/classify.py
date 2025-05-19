@@ -61,7 +61,7 @@ def main(dataset_path, img_dir, output_path, skip, top, model, print_report):
 
     report_path = None
     if output_path is None:
-        report_path = Path("./data/output") / Path(f'report_{time.strftime("%Y%m%d%H%M%S")}.csv')
+        report_path = Path(".") / Path(f'report_{time.strftime("%Y%m%d%H%M%S")}.csv')
     else:
         report_path = Path(output_path)
         report_dir = report_path.parent
