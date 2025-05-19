@@ -1,0 +1,2 @@
+include bargal/predictors/baseline/mlp.pkl
+include bargal/predictors/baseline/scaler.pkl

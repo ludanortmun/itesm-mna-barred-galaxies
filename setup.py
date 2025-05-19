@@ -25,5 +25,6 @@ setup(
     },
     author="ludanortmun",
     description="A tool for barred galaxy detection and analysis",
-    python_requires=">=3.7"
+    python_requires=">=3.7",
+    include_package_data=True,
 )
