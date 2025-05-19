@@ -1,3 +1,5 @@
+import time
+
 import click
 import numpy as np
 
@@ -18,7 +20,7 @@ SUPPORTED_MODELS = {
 @click.option('--img-dir', type=click.Path(), default=None,
               help='Path to local image directory. If provided, galaxy images will be attempted to be loaded from it. '
                    'If a directory is not provided or an image is not found in it, it will instead download from Legacy Survey.')
-@click.option('--output-path', '-o', default='./data/output/report.csv', type=click.Path(),
+@click.option('--output-path', '-o', default=None, type=click.Path(),
               help='Output path for the classification report.')
 @click.option('--skip', '-s', type=int, default=None, help='Number of entries to skip')
 @click.option('--top', '-t', type=int, default=None, help='Number of entries to process')
@@ -57,8 +59,16 @@ def main(dataset_path, img_dir, output_path, skip, top, model, print_report):
             df.at[i, 'img'] = str(img_path)
 
 
-    click.echo(f"Writing report to {output_path}")
-    df.iloc[start:end].to_csv(output_path, index=False)
+    report_path = None
+    if output_path is None:
+        report_path = Path("./data/output") / Path(f'report_{time.strftime("%Y%m%d%H%M%S")}.csv')
+    else:
+        report_path = Path(output_path)
+        report_dir = report_path.parent
+        report_dir.mkdir(parents=True, exist_ok=True)
+
+    click.echo(f"Writing report to {report_path}")
+    df.iloc[start:end].to_csv(report_path, index=False)
 
     if print_report:
         click.echo('Classification report')
