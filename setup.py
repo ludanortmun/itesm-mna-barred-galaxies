@@ -12,7 +12,9 @@ setup(
         "pandas~=2.2.3",
         "Pillow~=11.2.1",
         "Requests~=2.32.3",
-        "setuptools~=68.2.0",
+        "setuptools~=70.0.0",
+        "joblib~=1.2.0",
+        "scikit_learn~=1.6.1"
     ],
     entry_points={
         "console_scripts": [
