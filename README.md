@@ -76,7 +76,7 @@ option is available, which will select the baseline MLP classifier. Details on t
 [this notebook](https://github.com/ludanortmun/itesm-mna-barred-galaxies/blob/main/notebooks/Avance3.Equipo22.ipynb).
 
 ```bash
-bargal-classify data/dataset.csv -o ouput/directory/report.csv --model mlp
+bargal-classify data/dataset.csv -o output/directory/report.csv --model mlp
 ```
 
 ### Download images

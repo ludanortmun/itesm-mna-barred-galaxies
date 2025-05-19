@@ -26,7 +26,7 @@ SUPPORTED_MODELS = {
               help='Model to use for classification.')
 @click.option('--print-report', is_flag=True, default=False, help='Print the classification report.')
 def main(dataset_path, img_dir, output_path, skip, top, model, print_report):
-    click.echo(f'Loading dataset from {dataset_path}'"")
+    click.echo(f'Loading dataset from {dataset_path}')
     df = load_dataset(dataset_path)
 
     if img_dir is not None:
