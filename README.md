@@ -17,10 +17,10 @@ All scripts and tools are contained in the `bargal` (short for **bar**red **gal*
 CLI applications to manage the dataset, as well as modules that are used as part of the implementation of the Jupyter
 notebooks.
 
-To install the `bargal` package, from the repository root run:
+To install the `bargal` package run:
 
 ```bash
-pip install .
+pip install git+https://github.com/ludanortmun/itesm-mna-barred-galaxies.git
 ```
 
 ## Usage
