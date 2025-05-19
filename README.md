@@ -25,6 +25,60 @@ pip install .
 
 ## Usage
 
+### Classifying galaxies
+
+#### Basic usage
+
+The `bargal-classify` command can be used to detect bars in galaxies. As an argument, it requires a path to the dataset,
+which can be in CSV or FITS format. This dataset must contain at least the `name`, `objra` and `objdec` columns.
+
+By default, this will write a report to the `./data/output/report.csv` path, but can be overridden with the
+`-o | --output-path` option.
+
+```bash
+bargal-classify data/dataset.csv -o output/directory/report.csv
+```
+
+This report will be the same as the original dataset with an additional column `is_barred_pred`, which will be 1 if the
+galaxy is barred or 0 otherwise.
+
+This command will use the dataset to retrieve and download the corresponding images for each galaxy directly from
+Legacy Survey. It is possible to provide a path to a local directory by passing the `--img-dir` option,
+in which case the following should happen:
+
+- If the local directory contains an image for the given galaxy, it will use that instead of downloading a new one.
+- If an image is not found locally, an image will be downloaded and stored in the given directory.
+- The report will include a new `img` column that will include the local path to the .fits image.
+
+```bash
+bargal-classify data/dataset.csv -o output/directory/report.csv --img-dir path/to/img/dir
+```
+
+`--skip` (`-s`) and `--top` (`-t`) parameters can also be used to classify only a subset of the dataset. This is useful
+to implement pagination logic to the classification jobs. If any of them are present, the resulting report will only
+include the processed rows.
+
+```bash
+bargal-classify data/dataset.csv -o output/directory/report.csv --skip 10 --top 10
+```
+
+The `--print-report` flag can also be added, in which case the command will print the results in addition to writing 
+them to the report file. This is recommended for smaller outputs.
+
+```bash
+bargal-classify data/dataset.csv --top 10 --print-report
+```
+
+#### Model selection
+
+The `--model` option can be passed to select which model to use for classification. At the time being, only the `mlp`
+option is available, which will select the baseline MLP classifier. Details on this model can be found in
+[this notebook](https://github.com/ludanortmun/itesm-mna-barred-galaxies/blob/main/notebooks/Avance3.Equipo22.ipynb).
+
+```bash
+bargal-classify data/dataset.csv -o ouput/directory/report.csv --model mlp
+```
+
 ### Download images
 
 The basic dataset is included in this repository; however, due to size constraints, the actual images are not included.
@@ -68,8 +122,8 @@ bargal-datasetdown data/dataset.csv -o data/images --use-fits
 
 ### Preprocess images
 
-The `bargal-preprocess` command is used to preprocess the downloaded images. This is intended to be used with FITS
-images.
+The `bargal-preprocess` command is used to preprocess the downloaded images. The main purpose of this is to create the
+dataset to train the classifier model with. This is intended to be used with FITS images.
 It requires the path to the dataset and the path to the downloaded images' folder. By default, the output images will be
 saved in the data/preprocessed directory, but can be changes using the `--output-dir` (`-o`) option.
 
@@ -77,7 +131,7 @@ saved in the data/preprocessed directory, but can be changes using the `--output
 bargal-preprocess data/dataset.csv data/images -o data/preprocessed
 ````
 
-This command also skip and top parameters to limit the number of images to be preprocessed.
+This command also has skip and top parameters to limit the number of images to be preprocessed.
 
 ```bash
 bargal-preprocess data/dataset.csv data/images -o data/preprocessed --skip 10 --top 10
@@ -109,4 +163,4 @@ You can do this by installing the package from Git. To do this, run the followin
 
 You will be prompted to restart your session. After you do, the bargal package should be available for import.
 
-Then, simply replace any path referencing the `../data` directory to match the path to the data in your Colab session. 
+Then, replace any path referencing the `../data` directory to match the path to the data in your Colab session. 

@@ -1,6 +1,8 @@
 import click
 import numpy as np
 
+from pathlib import Path
+
 from bargal.dataset.load import load_dataset
 from bargal.images.client import GalaxyImageClient
 from bargal.models import Galaxy
@@ -27,15 +29,18 @@ def main(dataset_path, img_dir, output_path, skip, top, model, print_report):
     click.echo(f'Loading dataset from {dataset_path}'"")
     df = load_dataset(dataset_path)
 
-    click.echo(f"Loading images from {img_dir}")
+    if img_dir is not None:
+        click.echo(f"Loading images from {img_dir}")
+    else:
+        click.echo("Image directory not specified, will download all images from Legacy Survey.")
     client = GalaxyImageClient(storage_path=img_dir)
 
     classifier_type = SUPPORTED_MODELS[model]
     classifier = classifier_type(img_client=client)
 
-    # Drop the 'Bars' column
-    df.drop('Bars', axis=1, inplace=True)
     df['is_barred_pred'] = np.nan
+    if img_dir is not None:
+        df['img'] = None
 
     start = skip if skip else 0
     end = min(start + top if top else len(df), len(df))
@@ -46,6 +51,10 @@ def main(dataset_path, img_dir, output_path, skip, top, model, print_report):
 
         result = classifier.classify(g)
         df.at[i, 'is_barred_pred'] = int(result)
+
+        if img_dir is not None:
+            img_path = Path(img_dir) / Path(g.name + '.fits')
+            df.at[i, 'img'] = str(img_path)
 
 
     click.echo(f"Writing report to {output_path}")
