@@ -175,3 +175,4 @@ cython_debug/
 
 data/images/*
 data/processed/*
+data/output/*
