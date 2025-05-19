@@ -55,7 +55,7 @@ def main(dataset_path, img_dir, output_path, skip, top, model, print_report):
         df.at[i, 'is_barred_pred'] = int(result)
 
         if img_dir is not None:
-            img_path = Path(img_dir) / Path(g.name + '.fits')
+            img_path = Path(img_dir) / Path(g.name.strip() + '.fits')
             df.at[i, 'img'] = str(img_path)
 
 

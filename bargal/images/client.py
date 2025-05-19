@@ -77,7 +77,7 @@ class GalaxyImageClient:
         """
         g = galaxy if isinstance(galaxy, Galaxy) else Galaxy.from_dict(galaxy)
 
-        cached = self._get_cached(f"{g.name}.jpg")
+        cached = self._get_cached(f"{g.name.strip()}.jpg")
         if cached:
             return cached
 
@@ -112,7 +112,7 @@ class GalaxyImageClient:
         result = {}
 
         for band in set(bands).intersection(supported_bands):
-            img_name = f"{g.name}.{band}.jpg"
+            img_name = f"{g.name.strip()}.{band}.jpg"
             cached = self._get_cached(img_name)
             if cached:
                 result[band] = cached
@@ -165,7 +165,7 @@ class GalaxyImageClient:
 
         # Otherwise, we download the FITS image for the galaxy.
         # A benefit of this is that a single download will contain all three bands as separate channels.
-        fits_img_name = f"{g.name}.fits"
+        fits_img_name = f"{g.name.strip()}.fits"
         fits_data = self._get_cached(fits_img_name)
         if not fits_data:
             fits_data = _download_image(g, bands='grz', img_format='fits')
