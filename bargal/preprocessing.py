@@ -126,7 +126,7 @@ SQRT_GR_DIFF = GRDiffProcessor(
     result_transform=make_image_pipeline(
         sqrt_transformer(),
         adaptive_normalize_transformer(),
-        center_zoom_transformer(2),
+        center_zoom_transformer(1.25),
     )
 )
 
@@ -139,7 +139,7 @@ GRLOG_GR_DIFF = GRDiffProcessor(
         log_transformer()
     ),
     result_transform=make_image_pipeline(
-        center_zoom_transformer(2),
+        center_zoom_transformer(1.25),
         adaptive_normalize_transformer(),
     )
 )
@@ -153,7 +153,7 @@ GRLOG_GR_DIFF_MASKED = GRDiffProcessor(
         log_transformer()
     ),
     result_transform=make_image_pipeline(
-        center_zoom_transformer(2),
+        center_zoom_transformer(1.25),
         adaptive_normalize_transformer(),
         circular_mask_transformer()
     )
@@ -161,7 +161,7 @@ GRLOG_GR_DIFF_MASKED = GRDiffProcessor(
 
 CROP_RGB=RGBProcessor(
     transform=make_image_pipeline(
-        center_zoom_transformer(2),
+        center_zoom_transformer(1.25),
         normalize_transformer(),
     )
 )
@@ -183,6 +183,15 @@ GR_RATIO = GRRatioProcessor(
     )
 )
 
+GR_SQUARED_DIFF = GRDiffProcessor(
+    g_transform=squared_transformer(),
+    r_transform=squared_transformer(),
+    result_transform=make_image_pipeline(
+        center_zoom_transformer(1.25),
+        adaptive_normalize_transformer()
+    ),
+)
+
 
 PREPROCESSORS = {
     'SQRT_GR_DIFF': SQRT_GR_DIFF,
@@ -190,4 +199,5 @@ PREPROCESSORS = {
     'GRLOG_GR_DIFF_MASKED': GRLOG_GR_DIFF_MASKED,
     'CROP_RGB': CROP_RGB,
     'GR_RATIO': GR_RATIO,
+    'GR_SQUARED_DIFF': GR_SQUARED_DIFF,
 }
