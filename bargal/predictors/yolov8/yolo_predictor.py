@@ -3,12 +3,13 @@ from ultralytics import YOLO
 import os
 import numpy as np
 from pathlib import Path
+from appdirs import user_cache_dir
+import gdown
 
 from bargal.predictors.base import BasePredictor
 from bargal.preprocessing import GRLOG_GR_DIFF
 
-this_dir, this_filename = os.path.split(__file__)
-base_path = Path(this_dir)
+base_path = user_cache_dir('bargal', 'ludanortmun')
 
 # === Umbral de confianza mínimo ===
 CONFIDENCE_THRESHOLD = 0.36
@@ -21,10 +22,19 @@ model_paths = [
     base_path / Path('best_v8x_LogDiff.pt')
 ]
 
+model_g_drive_ids = [
+    '1-58WbVoXqi64wCCFIuXfloS4exxb74h0',
+    '1nudTrxMzfQhPVBxJkxRM9kQqB42YV8tv',
+    '1JhIDNKNwRLyIzb64-3uxEZ0OrmFkPP-m',
+    '1V9eBg-HAjUi6IRn5FVAxRrfUD6Iovd6-'
+]
+
 class YoloPredictor(BasePredictor):
     def __init__(self, img_client):
         super().__init__(img_client)
         self._img_processor = GRLOG_GR_DIFF
+
+        self.__ensure_model_downloaded()
 
         self._models = [YOLO(p) for p in model_paths]
         self._img_height = 640
@@ -41,6 +51,13 @@ class YoloPredictor(BasePredictor):
         final_detections = self.__ensemble_predictions(results_list)
 
         return len(final_detections) > 0
+
+    @classmethod
+    def __ensure_model_downloaded(cls):
+        os.makedirs(base_path, exist_ok=True)
+        for i, p in enumerate(model_paths):
+            if not os.path.exists(p):
+                gdown.download(id=model_g_drive_ids[i], output=str(p))
 
     @classmethod
     def __iou(cls, box1, box2):

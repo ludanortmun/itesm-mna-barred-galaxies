@@ -4,6 +4,7 @@ import click
 import numpy as np
 
 from pathlib import Path
+from tqdm import tqdm
 
 from bargal.dataset.load import load_dataset
 from bargal.images.client import GalaxyImageClient
@@ -50,7 +51,7 @@ def main(dataset_path, img_dir, output_path, skip, top, model, print_report):
     start = skip if skip else 0
     end = min(start + top if top else len(df), len(df))
 
-    for i in range(start, end):
+    for i in tqdm(range(start, end)):
         row = df.iloc[i]
         g = Galaxy.from_dict(row.to_dict())
 

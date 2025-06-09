@@ -16,7 +16,10 @@ setup(
         "joblib~=1.2.0",
         "scikit_learn~=1.6.1",
         "tabulate~=0.9.0",
-        "ultralytics~=8.3.152"
+        "ultralytics~=8.3.152",
+        "appdirs~=1.4.4",
+        "gdown~=5.0.0",
+        "tqdm~=4.67.1"
     ],
     entry_points={
         "console_scripts": [

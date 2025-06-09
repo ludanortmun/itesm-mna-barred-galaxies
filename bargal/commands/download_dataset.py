@@ -2,6 +2,8 @@ import os
 
 import click
 
+from tqdm import tqdm
+
 from bargal.images.client import GalaxyImageClient
 from bargal.models import Galaxy
 from bargal.dataset.load import load_dataset
@@ -33,7 +35,7 @@ def main(dataset_file: str, output_dir: str, skip: int or None, top: int or None
 
     failures = []
 
-    for i in range(start, end):
+    for i in tqdm(range(start, end)):
         row = df.iloc[i]
         g = Galaxy.from_dict(row.to_dict())
 

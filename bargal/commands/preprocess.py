@@ -3,6 +3,7 @@ import os
 import click
 import numpy as np
 from PIL import Image
+from tqdm import tqdm
 
 from bargal.dataset.load import load_dataset
 from bargal.images.client import GalaxyImageClient
@@ -40,7 +41,7 @@ def main(dataset_path: str,
     click.echo(f"Processed images will be saved to {output_dir}")
     img_processor = PREPROCESSORS[preprocessor.upper()]
 
-    for i in range(start, end):
+    for i in tqdm(range(start, end)):
         row = df.iloc[i]
         g = Galaxy.from_dict(row.to_dict())
 
