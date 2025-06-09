@@ -15,7 +15,8 @@ setup(
         "setuptools~=70.0.0",
         "joblib~=1.2.0",
         "scikit_learn~=1.6.1",
-        "tabulate~=0.9.0"
+        "tabulate~=0.9.0",
+        "ultralytics~=8.3.152"
     ],
     entry_points={
         "console_scripts": [

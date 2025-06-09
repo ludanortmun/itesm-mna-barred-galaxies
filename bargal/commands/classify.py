@@ -9,9 +9,11 @@ from bargal.dataset.load import load_dataset
 from bargal.images.client import GalaxyImageClient
 from bargal.models import Galaxy
 from bargal.predictors.baseline.predictor import MLPBaselinePredictor
+from bargal.predictors.yolov8.yolo_predictor import YoloPredictor
 
 SUPPORTED_MODELS = {
     'mlp': MLPBaselinePredictor,
+    'yolo': YoloPredictor
 }
 
 
@@ -24,10 +26,11 @@ SUPPORTED_MODELS = {
               help='Output path for the classification report.')
 @click.option('--skip', '-s', type=int, default=None, help='Number of entries to skip')
 @click.option('--top', '-t', type=int, default=None, help='Number of entries to process')
-@click.option('--model', type=click.Choice(SUPPORTED_MODELS.keys(), case_sensitive=False), default='mlp',
+@click.option('--model', type=click.Choice(SUPPORTED_MODELS.keys(), case_sensitive=False), default='yolo',
               help='Model to use for classification.')
 @click.option('--print-report', is_flag=True, default=False, help='Print the classification report.')
 def main(dataset_path, img_dir, output_path, skip, top, model, print_report):
+    click.echo(f'Using model: {model.upper()}')
     click.echo(f'Loading dataset from {dataset_path}')
     df = load_dataset(dataset_path)
 
