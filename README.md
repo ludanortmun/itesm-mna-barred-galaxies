@@ -32,7 +32,7 @@ pip install git+https://github.com/ludanortmun/itesm-mna-barred-galaxies.git
 The `bargal-classify` command can be used to detect bars in galaxies. As an argument, it requires a path to the dataset,
 which can be in CSV or FITS format. This dataset must contain at least the `name`, `objra` and `objdec` columns.
 
-By default, this will write a report to the `./report_{timestamp}.csv` path, where `{timestamp}` will be replaced with 
+By default, this will write a report to the `./report_{timestamp}.csv` path, where `{timestamp}` will be replaced with
 the timestamp at which the report was written. It can be overridden with the `-o | --output-path` option.
 
 ```bash
@@ -62,7 +62,7 @@ include the processed rows.
 bargal-classify data/dataset.csv -o output/directory/report.csv --skip 10 --top 10
 ```
 
-The `--print-report` flag can also be added, in which case the command will print the results in addition to writing 
+The `--print-report` flag can also be added, in which case the command will print the results in addition to writing
 them to the report file. This is recommended for smaller outputs.
 
 ```bash
@@ -71,9 +71,14 @@ bargal-classify data/dataset.csv --top 10 --print-report
 
 #### Model selection
 
-The `--model` option can be passed to select which model to use for classification. At the time being, only the `mlp`
-option is available, which will select the baseline MLP classifier. Details on this model can be found in
-[this notebook](https://github.com/ludanortmun/itesm-mna-barred-galaxies/blob/main/notebooks/Avance3.Equipo22.ipynb).
+The `--model` option can be passed to select which model to use for classification. At the time being, the following
+models are available:
+
+- `yolo` (Default): the YOLOv8 ensemble model that was selected as the best model for this project. Details on this
+  model can be found
+  in [this notebook](https://github.com/ludanortmun/itesm-mna-barred-galaxies/blob/main/notebooks/Voting_YOLOv8.ipynb)
+- `mlp`: this will select the baseline MLP classifier. Details on this model can be found
+  in [this notebook](https://github.com/ludanortmun/itesm-mna-barred-galaxies/blob/main/notebooks/Avance3.Equipo22.ipynb).
 
 ```bash
 bargal-classify data/dataset.csv -o output/directory/report.csv --model mlp
